@@ -23,7 +23,7 @@ class Pow(object):
 
     def _prepare_data(self, nonce):
         data_lst = [self._block.prev_block_hash,
-                    self._block.data,
+                    self._block.hashTX(),
                     self._block.timestamp,
                     str(self.target_bits),
                     str(nonce)]

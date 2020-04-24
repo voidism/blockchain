@@ -22,7 +22,7 @@ class Block(object):
 
     def __init__(self, data='Genesis Block', prev_block_hash=''):
         self._timestamp = utils.encode(str(int(time.time())))
-        self._data = utils.encode(data)
+        self._data = data
         self._prev_block_hash = utils.encode(prev_block_hash)
         self._hash = None # self._set_hash(self._timestamp, self._data, self._prev_block_hash)
         self._nonce = None
@@ -49,7 +49,11 @@ class Block(object):
 
     @property
     def data(self):
-        return utils.decode(self._data)
+        return self._data
+
+    @property
+    def transactions(self):
+        return self._data
 
     @property
     def prev_block_hash(self):
@@ -62,6 +66,15 @@ class Block(object):
     @property
     def nonce(self):
         return str(self._nonce)
+
+    def hashTX(self):
+        # return a hash of the transactions in the block
+        tx_hashs = []
+
+        for tx in self.data:
+            tx_hashs.append(tx.ID)
+
+        return utils.sum256(utils.encode(''.join(tx_hashs)))
 
     def serialize(self):
         return pickle.dumps(self)
