@@ -4,22 +4,10 @@ import pickle
 
 import utils
 from proof_of_work import Pow
+from merkle_tree import MerkleTree
 
 
 class Block(object):
-    """ Represents a new Block object.
-
-    Args:
-        data (string): Data to be sent.
-        prev_block_hash (string): Hash of the previous Block. 
-
-    Attributes:
-        _timestamp (bytes): Creation timestamp of Block.
-        _data (bytes): Data to be sent.
-        _prev_block_hash (bytes): Hash of the previous Block.
-        _hash (bytes): Hash of the current Block.
-    """
-
     def __init__(self, data='Genesis Block', prev_block_hash=''):
         self._timestamp = utils.encode(str(int(time.time())))
         self._data = data
@@ -72,9 +60,10 @@ class Block(object):
         tx_hashs = []
 
         for tx in self.data:
-            tx_hashs.append(tx.ID)
+            tx_hashs.append(pickle.dumps(tx.ID))
 
-        return utils.sum256(utils.encode(''.join(tx_hashs)))
+        m_tree = MerkleTree(tx_hashs)
+        return utils.sum256(m_tree.root_hash)
 
     def serialize(self):
         return pickle.dumps(self)

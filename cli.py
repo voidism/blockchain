@@ -76,8 +76,9 @@ def create_wallet(wallets):
 
 def send(bc, wdb, from_addr, to_addr, amount):
     tx = Transaction(from_addr, to_addr, amount, bc, data=None, walletdb=wdb, coinbase=False).set_id()
-    bc.mine_block([tx])
-    print(f'Send from {from_addr} to {to_addr} with amount {amount}.')
+    reward = Transaction(None, from_addr, None, bc, data=None, walletdb=wdb, coinbase=True).set_id()
+    bc.mine_block([tx, reward])
+    print(f'\nSuccess!\nSend from {from_addr} to {to_addr} with amount {amount}.')
 
 def getbalance(bc, address):
     pubkey_hash = utils.address2hash(address)
