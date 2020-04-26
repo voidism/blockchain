@@ -3,6 +3,7 @@ from collections import defaultdict
 from block import Block
 from db import DB
 from transaction import Transaction
+import sys
 
 class ContinueIt(Exception):
     pass
@@ -21,6 +22,9 @@ class Blockchain(object):
                 print(f'Blockchain already exists in `{Blockchain.db_file}`.\nDelete it first or we cannot build another in the same directory.')
         else:
             self._tip = None
+            if address is None:
+                print('Initialize Blockchain with no address. Abort!')
+                sys.exit(0)
             base_tx = Transaction(to_addr=address, data=Blockchain.genesis_coinbase_data, coinbase=True).set_id()
             genesis = Block([base_tx]).pow_of_block()
             self.put_block(genesis)

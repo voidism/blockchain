@@ -10,38 +10,38 @@ import utils
 def get_parser():
     parser = argparse.ArgumentParser()
     sub_parser = parser.add_subparsers(help='commands')
+    # A createwallet command
+    bc_parser = sub_parser.add_parser(
+        'createwallet', help='Create a wallet')
+    bc_parser.add_argument(
+        '-wallet', type=str, dest='wallet', help='WALLET')
     # A createblockchain command
     create_parser = sub_parser.add_parser(
-        'createblockchain', help='Create blockchain with the provided ADDRESS')
+        'createblockchain', help='Create blockchain with the provided ADDRESS (-address ADDRESS)')
     create_parser.add_argument(
-        '-address', type=str, dest='create_address', help='ADDRESS of the blockchain')
+        '-address', type=str, dest='create_address', help='ADDRESS of the blockchain (-address ADDRESS)')
     # A print command
     print_parser = sub_parser.add_parser(
         'printchain', help='Print all the blocks of the blockchain')
     print_parser.add_argument('-print', dest='printchain', action='store_true')
     # A print block command
     printblock_parser = sub_parser.add_parser(
-        'printblock', help='Print the blocks of the blockchain to height')
+        'printblock', help='Print the blocks of the blockchain to HEIGHT (-height HEIGHT)')
     printblock_parser.add_argument('-printblock', dest='printblock', action='store_true')
     printblock_parser.add_argument('-height', dest='height', type=int)
-    # A add block command
-    addblock_parser = sub_parser.add_parser(
-        'addblock', help='Add blocks to the blockchain')
-    addblock_parser.add_argument('-addblock', dest='addblock', action='store_true')
-    addblock_parser.add_argument('-transaction', dest='transaction', type=str)
-        # A createwallet command
-    bc_parser = sub_parser.add_parser(
-        'createwallet', help='Create a wallet')
-    bc_parser.add_argument(
-        '-wallet', type=str, dest='wallet', help='WALLET')
+    # # A add block command
+    # addblock_parser = sub_parser.add_parser(
+    #     'addblock', help='Add blocks to the blockchain')
+    # addblock_parser.add_argument('-addblock', dest='addblock', action='store_true')
+    # addblock_parser.add_argument('-transaction', dest='transaction', type=str)
     # A getbalance command
     balance_parser = sub_parser.add_parser(
-        'getbalance', help='Get balance of ADDRESS')
+        'getbalance', help='Get balance of ADDRESS (-address ADDRESS)')
     balance_parser.add_argument(
         '-address', type=str, dest='balance_address', help='ADDRESS of balance')
     # A send command
     send_parser = sub_parser.add_parser(
-        'send', help='Send AMOUNT of coins from FROM address to TO')
+        'send', help='Send AMOUNT of coins from FROM address to TO (-from FROM -to TO -amount AMOUNT)')
     send_parser.add_argument(
         '-from', type=str, dest='send_from', help='FROM')
     send_parser.add_argument(
@@ -52,6 +52,9 @@ def get_parser():
     return parser
 
 def create_blockchain(address):
+    if address is None or not wdb.exist_wallet(address):
+        print(f"Invalid wallet address: {address}. Create wallet first.")
+        return
     bc = Blockchain(address)
     return bc
 
@@ -88,6 +91,9 @@ def send(bc, wdb, from_addr, to_addr, amount):
     print(f'\nSuccess!\nSend from {from_addr} to {to_addr} with amount {amount}.')
 
 def getbalance(bc, address):
+    if not wdb.exist_wallet(address):
+        print(f"Invalid wallet address: {address}. Create wallet first.")
+        return
     pubkey_hash = utils.address2hash(address)
     balance = 0
     UTXOs = bc.find_utxo(pubkey_hash)
@@ -99,19 +105,17 @@ if __name__ == '__main__':
     parser = get_parser()
     args = parser.parse_args()
     bc = None
-    wdb = None
+    wdb = WalletDB()
     if hasattr(args, 'wallet'):
-        wdb = WalletDB()
         create_wallet(wdb)
-
 
     if hasattr(args, 'create_address'):
         bc = create_blockchain(args.create_address)
     
-    if hasattr(args, 'addblock'):
-        if bc is None:
-            bc = Blockchain()
-        bc.mine_block(args.transaction)
+    # if hasattr(args, 'addblock'):
+    #     if bc is None:
+    #         bc = Blockchain()
+    #     bc.mine_block(args.transaction)
     if hasattr(args, 'printchain'):
         if bc is None:
             bc = Blockchain()
@@ -126,8 +130,6 @@ if __name__ == '__main__':
         getbalance(bc, args.balance_address)
 
     if hasattr(args, 'send_from') and hasattr(args, 'send_to') and hasattr(args, 'send_amount'):
-        if wdb is None:
-            wdb = WalletDB()
         if bc is None:
             bc = Blockchain()
         send(bc, wdb, args.send_from, args.send_to, args.send_amount)
