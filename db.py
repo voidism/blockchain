@@ -43,6 +43,9 @@ class WalletDB():
     def get_wallet(self, addr):
         return self.wallets[addr]
 
+    def exist_wallet(self, addr):
+        return addr in self.wallets
+
     def save_to_file(self):
         with open(self.wallet_file, 'wb') as f:
             pickle.dump(self.wallets, f)

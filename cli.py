@@ -9,10 +9,12 @@ import utils
 
 def get_parser():
     parser = argparse.ArgumentParser()
-    # A createblockchain command
-    parser.add_argument(
-        '--create', type=str, help='ADDRESS of create blockchain')
     sub_parser = parser.add_subparsers(help='commands')
+    # A createblockchain command
+    create_parser = sub_parser.add_parser(
+        'createblockchain', help='Create blockchain with the provided ADDRESS')
+    create_parser.add_argument(
+        '-address', type=str, dest='create_address', help='ADDRESS of the blockchain')
     # A print command
     print_parser = sub_parser.add_parser(
         'printchain', help='Print all the blocks of the blockchain')
@@ -51,7 +53,6 @@ def get_parser():
 
 def create_blockchain(address):
     bc = Blockchain(address)
-    print(f'Create Blockchain; Reward sent to {address}')
     return bc
 
 def print_blockchain(bc=None, lim=None):
@@ -75,6 +76,12 @@ def create_wallet(wallets):
     print(f"New address: {address}")
 
 def send(bc, wdb, from_addr, to_addr, amount):
+    if not wdb.exist_wallet(from_addr):
+        print(f"Invalid wallet address: {from_addr}. Create wallet first.")
+        return
+    if not wdb.exist_wallet(to_addr):
+        print(f"Invalid wallet address: {to_addr}. Create wallet first.")
+        return
     tx = Transaction(from_addr, to_addr, amount, bc, data=None, walletdb=wdb, coinbase=False).set_id()
     reward = Transaction(None, from_addr, None, bc, data=None, walletdb=wdb, coinbase=True).set_id()
     bc.mine_block([tx, reward])
@@ -98,8 +105,8 @@ if __name__ == '__main__':
         create_wallet(wdb)
 
 
-    if args.create is not None:
-        bc = create_blockchain(args.create)
+    if hasattr(args, 'create_address'):
+        bc = create_blockchain(args.create_address)
     
     if hasattr(args, 'addblock'):
         if bc is None:

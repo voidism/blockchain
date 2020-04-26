@@ -17,11 +17,14 @@ class Blockchain(object):
         # self._blocks = [Block().pow_of_block()]
         if Blockchain.latest in self._db:
             self._tip = self._db.get(Blockchain.latest)
+            if address is not None:
+                print(f'Blockchain already exists in `{Blockchain.db_file}`.\nDelete it first or we cannot build another in the same directory.')
         else:
             self._tip = None
             base_tx = Transaction(to_addr=address, data=Blockchain.genesis_coinbase_data, coinbase=True).set_id()
             genesis = Block([base_tx]).pow_of_block()
             self.put_block(genesis)
+            print(f'Create Blockchain; Reward sent to {address}')
 
     def put_block(self, block):
         # AddBlock saves provided data as a block in the blockchain
@@ -66,8 +69,6 @@ class Blockchain(object):
         # Returns a list of transactions containing unspent outputs
         spent_txo = defaultdict(list)
         unspent_txs = []
-        # import pdb
-        # pdb.set_trace()
         for block in self.blocks:
             for tx in block.transactions:
 

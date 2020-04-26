@@ -2,8 +2,6 @@ import sys
 import pickle
 import utils
 
-import pdb
-
 class Transaction(object):
     subsidy = 2048
     def __init__(self, from_addr=None, to_addr=None, amount=None, chain=None, data=None, walletdb=None, coinbase=False):
