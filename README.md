@@ -17,7 +17,7 @@ Install them by `pip3 install -r requirements.txt`
 
 Run
 ```
-./pseudobitcoin createwallet
+./pseudoBitcoin createwallet
 ```
 
 After that, we get a new wallet address.
@@ -32,7 +32,7 @@ Bind an address to the Blockchain.
 It will accept the reward of the Genesis block.
 
 ```
-./pseudobitcoin createblockchain -address LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3
+./pseudoBitcoin createblockchain -address LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3
 ```
 
 The first coinbase block is created.
@@ -53,7 +53,7 @@ Create Blockchain; Reward sent to LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3
 
 Run 
 ```
-./pseudobitcoin getbalance -address LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3
+./pseudoBitcoin getbalance -address LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3
 ```
 
 We can see the balance of the wallet.
@@ -70,7 +70,7 @@ Now we send a transaction from A to B with amount=10.
 - A: `LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3`
 - B: `LPYim5veN6s24RRtvhqMy172u77mMSRunX`
 ```
-./pseudobitcoin send -from LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3 -to LPYim5veN6s24RRtvhqMy172u77mMSRunX -amount 10
+./pseudoBitcoin send -from LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3 -to LPYim5veN6s24RRtvhqMy172u77mMSRunX -amount 10
 ```
 
 You can specify the amount of the transaction after argument `-amount`.
@@ -96,6 +96,50 @@ CoinbaseTx(
 Success!
 Send from LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3 to LPYim5veN6s24RRtvhqMy172u77mMSRunX with amount 10.
 ```
+
+### 5. Print Chain and Blocks
+
+To print the whole chain, run
+```
+./pseudoBitcoin printblock -height 3
+```
+
+All blocks will be printed, and proof of work (PoW) will also be evaluated.
+
+```
+
++- Block ---------
+| hash <=== 000023c11c30a6a7bc4135475cba67784e2ae5a27ea576579e92c189b5620cf2
+| time = b'1587922677'
+| data = [
+UTXOTx(
+	id='af15102ee0d58d85905cfef190abc7ef08110756508fcbdbf5d0582df245e8db',
+	vin=[TXInput(tx_id=b'2d988778b8960d69b5394644391e90e56261988b5951731ba404b10d9537ecbf', value=1, script_sig=None, public_key='04600296660ae3586010c945de710c0ef1cb00207c23ede7244ceb0dda70bec017174161d74f8080d0833e250f98f4f39ea131449b2ff20a4453ba9ae9f07f79b1')],
+	vout=[TXOutput(value=10, pubkey_hash=b'/m"\xa5\xf31\xa2\x9f6\xa9\n\xab\x9c\x94\xd9\xac\xf4y\xce\xa4'), TXOutput(value=2008, pubkey_hash=b"y\xf5`\x87\x8fl,N\x8bM\xe2'j:s\r\xea\xa4\x1a\x05")]
+)
+,
+CoinbaseTx(
+	id='e21d7311a3c0af6f99fe07c6f4c36e0926f1ff1b6a41dd3e59c165c369f9b9cc',
+	vin=[TXInput(tx_id=b'', value=-1, script_sig=None, public_key='Reward to LWLoyXEcE6sB7huq31JzPDt4fFaLUCLiy3')],
+	vout=[TXOutput(value=2048, pubkey_hash=b"y\xf5`\x87\x8fl,N\x8bM\xe2'j:s\r\xea\xa4\x1a\x05")]
+)
+]
+|nonce = 80482
+| prev ===> 00005fd7eb0ff06db43e224e856ad41c366b54cfa61b9f2828324572b2fc3ab4
++-----------------
+PoW: True
+
++- Block ---------
+
+...
+```
+
+To print part of the blocks, run
+
+```
+./pseudoBitcoin printblock -height 3
+```
+use `-height` to specify the number of blocks to print.
 
 ##  Functionalities
 1~5 are completed.
