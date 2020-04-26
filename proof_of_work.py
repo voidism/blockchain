@@ -5,15 +5,6 @@ import utils
 
 
 class Pow(object):
-    """ Performs a proof-of-work.
-
-    Args:
-        block (Block object): a Block object.
-
-    Attributes:
-        _block (Block object): a Block object.
-        _target (int): a integer target need to less than it.
-    """
     max_nonce = sys.maxsize
     target_bits = 16
 

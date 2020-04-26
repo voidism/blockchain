@@ -30,9 +30,3 @@ class Wallet(object):
     @property
     def address(self):
         return self._address
-
-
-if __name__ == '__main__':
-    w = Wallet()
-    assert w.hash_public_key == utils.address2hash(
-        w.address), "Hash of public key is Not Equal!"

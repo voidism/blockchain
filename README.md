@@ -150,3 +150,7 @@ use `-height` to specify the number of blocks to print.
 - [x] 5. Transaction(advanced) Mining reward(2%), Merkle tree(8%) --> 10%
 - [ ] ~~6. Network P2P(10%) or Server-Client(7%) --> 10%~~
 - [ ] ~~Other features Proof of ???, Special design --> 5%~~
+
+## Reference
+1. blockchain-py: https://github.com/yummybian/blockchain-py
+2. blockchain-tutorial: https://liuchengxu.gitbooks.io/blockchain-tutorial/content/
