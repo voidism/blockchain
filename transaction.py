@@ -4,7 +4,7 @@ import utils
 import time
 
 class Transaction(object):
-    subsidy = 2048
+    subsidy = 100
     def __init__(self, from_addr=None, to_addr=None, amount=None, chain=None, data=None, walletdb=None, coinbase=False):
         self._id = None
         self._vin = None
@@ -46,7 +46,7 @@ class Transaction(object):
             return '\nCoinbaseTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r},\n\ttime={3!r})\n'.format(
             self._id, self._vin, self._vout, self._timestamp)
         else:
-            return '\nUTXOTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r}\n)\n\ttime={3!r}'.format(
+            return '\nUTXOTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r},\n\ttime={3!r})'.format(
             self._id, self._vin, self._vout, self._timestamp)
 
     @property

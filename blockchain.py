@@ -5,9 +5,6 @@ from db import DB
 from transaction import Transaction
 import sys
 
-class ContinueIt(Exception):
-    pass
-
 class Blockchain(object):
     latest = 'l'
     db_file = 'blockchain.db'
@@ -62,10 +59,10 @@ class Blockchain(object):
         utxos = []
         unspent_txs = self.find_unspent_transactions(pubkey_hash)
 
-        for tx in unspent_txs:
-            for out in tx.vout:
-                if out.check_key(pubkey_hash):
-                    utxos.append(out)
+        for tx, out_idx in unspent_txs:
+            out = tx.vout[out_idx]
+            if out.check_key(pubkey_hash):
+                utxos.append(out)
 
         return utxos
 
@@ -83,18 +80,14 @@ class Blockchain(object):
                             spent_txo[tx_id].append(vin.value)
 
                 tx_id = tx.ID
-                try:
-                    for out_idx, out in enumerate(tx.vout):
-                        # Was the output spent?
-                        if spent_txo[tx_id]: # some of the outputs already been spent
-                            for spent_out in spent_txo[tx_id]:
-                                if spent_out == out_idx:
-                                    raise ContinueIt
+                for out_idx, out in enumerate(tx.vout):
+                    # Was the output spent?
+                    if spent_txo[tx_id]: # some of the outputs already been spent
+                        if out_idx in spent_txo[tx_id]:
+                            continue
 
-                        if out.check_key(pubkey_hash):
-                            unspent_txs.append(tx)
-                except ContinueIt:
-                    pass
+                    if out.check_key(pubkey_hash):
+                        unspent_txs.append((tx, out_idx))
 
         return unspent_txs
 
@@ -104,16 +97,14 @@ class Blockchain(object):
         unspent_outputs = defaultdict(list)
         unspent_txs = self.find_unspent_transactions(pubkey_hash)
 
-        for tx in unspent_txs:
+        for tx, out_idx in unspent_txs:
             tx_id = tx.ID
 
-            for out_idx, out in enumerate(tx.vout):
-                if out.check_key(pubkey_hash):
-                    accumulated += out.value
-                    unspent_outputs[tx_id].append(out_idx)
+            out = tx.vout[out_idx]
+            if out.check_key(pubkey_hash):
+                accumulated += out.value
+                unspent_outputs[tx_id].append(out_idx)
 
-                if accumulated >= amount:
-                    break
             if accumulated >= amount:
                 break
 
