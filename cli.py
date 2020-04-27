@@ -79,6 +79,10 @@ def create_wallet(wallets):
     print(f"New address: {address}")
 
 def send(bc, wdb, from_addr, to_addr, amount):
+    if amount is None:
+        print("Please specify the amount to send!")
+        return
+
     if not wdb.exist_wallet(from_addr):
         print(f"Invalid wallet address: {from_addr}. Create wallet first.")
         return

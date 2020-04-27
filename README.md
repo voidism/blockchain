@@ -13,6 +13,8 @@ Install them by `pip3 install -r requirements.txt`
 
 ## How to use?
 
+> If you use the OS other than Linux/MacOSX, you should replace `./pseudoBitcoin` with `python3 cli.py` in the following instructions.
+
 ### 1. Create Wallet
 
 Run
