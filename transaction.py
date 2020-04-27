@@ -1,6 +1,7 @@
 import sys
 import pickle
 import utils
+import time
 
 class Transaction(object):
     subsidy = 2048
@@ -24,8 +25,8 @@ class Transaction(object):
             pubkey_hash = utils.pubkey2hash(wallet.public_key)
             acc, valid_outputs = chain.accum_spendable_outputs(pubkey_hash, amount)
             if acc < amount:
-                raise ValueError(f"spendable value: {acc} < amount: {amount}, Abort!")
-                sys.exit()
+                print(f"spendable value: {acc} < amount: {amount}, Abort!")
+                sys.exit(0)
 
             # Build a list of inputs
             self._vin = []
@@ -36,15 +37,17 @@ class Transaction(object):
             # Build outputs
             self._vout = []
             self._vout.append(TXOutput(amount, to_addr))
-            self._vout.append(TXOutput(acc - amount, from_addr))
+            if acc - amount > 0:
+                self._vout.append(TXOutput(acc - amount, from_addr))
+        self._timestamp = str(time.time())
 
     def __repr__(self):
         if self.coinbase:
-            return '\nCoinbaseTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r}\n)\n'.format(
-            self._id, self._vin, self._vout)
+            return '\nCoinbaseTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r},\n\ttime={3!r})\n'.format(
+            self._id, self._vin, self._vout, self._timestamp)
         else:
-            return '\nUTXOTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r}\n)\n'.format(
-            self._id, self._vin, self._vout)
+            return '\nUTXOTx(\n\tid={0!r},\n\tvin={1!r},\n\tvout={2!r}\n)\n\ttime={3!r}'.format(
+            self._id, self._vin, self._vout, self._timestamp)
 
     @property
     def ID(self):
