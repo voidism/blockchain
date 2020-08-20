@@ -1,7 +1,7 @@
 Blockchain
 ===
 
-b05901033 電機四 莊永松
+b05901033 電機四 莊永松 Yung-Sung Chuang
 
 ## Prerequisites
 
@@ -163,13 +163,12 @@ use `-height` to specify the number of blocks to print.
 
 ##  Functionalities
 1~5 are completed.
-- [x] 1. Prototype: Block(10%), Blockchain(10%), Proof-of-Work(20%) --> 40%
-- [x] 2. Persistence: Database(20%), Client(20%) --> 40%
-- [x] 3. Transaction(basic): UTXO(5%) or Account model(2%) --> 5%
-- [x] 4. Address: Sign & Verify(5%) --> 5%
-- [x] 5. Transaction(advanced): Mining reward(2%), Merkle tree(8%) --> 10%
-- [ ] ~~6. Network: P2P(10%) or Server-Client(7%) --> 10%~~
-- [ ] ~~Other features: Proof of ???, Special design --> 5%~~
+- [x] 1. Prototype: Block, Blockchain, Proof-of-Work
+- [x] 2. Persistence: Database, Client
+- [x] 3. Transaction(basic): UTXO or Account model
+- [x] 4. Address: Sign & Verify
+- [x] 5. Transaction(advanced): Mining reward, Merkle tree
+- [ ] ~~6. Network: P2P or Server-Client~~
 
 ## Reference
 1. blockchain-py: https://github.com/yummybian/blockchain-py
